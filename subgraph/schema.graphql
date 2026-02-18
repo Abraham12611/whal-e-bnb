@@ -1,0 +1,100 @@
+type Whale @entity {
+  id: ID!                          # Wallet address
+  firstSeen: BigInt!
+  totalTrades: BigInt!
+  successfulTrades: BigInt!
+  winRate: BigDecimal!
+  totalVolumeUSD: BigDecimal!
+  averageTradeSize: BigDecimal!
+  currentHoldings: [Holding!]! @derivedFrom(field: "whale")
+  trades: [Trade!]! @derivedFrom(field: "whale")
+  swaps: [Swap!]! @derivedFrom(field: "whale")
+  isActive: Boolean!
+  lastTradeTimestamp: BigInt!
+  riskScore: Int!                  # 1-100
+  
+  # Performance metrics
+  profitUSD: BigDecimal!
+  lossUSD: BigDecimal!
+  profitLossRatio: BigDecimal!
+}
+
+type Trade @entity {
+  id: ID!                          # tx hash
+  whale: Whale!
+  timestamp: BigInt!
+  tokenIn: Bytes!
+  tokenOut: Bytes!
+  tokenInSymbol: String!
+  tokenOutSymbol: String!
+  amountIn: BigDecimal!
+  amountOut: BigDecimal!
+  amountUSD: BigDecimal!
+  profitUSD: BigDecimal
+  isSuccess: Boolean!
+  gasUsed: BigInt!
+  gasPrice: BigInt!
+  blockNumber: BigInt!
+  txHash: Bytes!
+}
+
+type Swap @entity {
+  id: ID!                          # tx hash + log index
+  whale: Whale!
+  pool: Pool!
+  timestamp: BigInt!
+  sender: Bytes!
+  recipient: Bytes!
+  amount0: BigDecimal!
+  amount1: BigDecimal!
+  sqrtPriceX96: BigInt!
+  liquidity: BigInt!
+  tick: Int!
+  blockNumber: BigInt!
+  txHash: Bytes!
+}
+
+type Holding @entity {
+  id: ID!                          # whale + token
+  whale: Whale!
+  token: Token!
+  balance: BigDecimal!
+  valueUSD: BigDecimal!
+  lastUpdated: BigInt!
+}
+
+type Token @entity {
+  id: ID!                          # Token address
+  symbol: String!
+  name: String!
+  decimals: BigInt!
+  totalSupply: BigDecimal!
+  tradeVolumeUSD: BigDecimal!
+  txCount: BigInt!
+  holders: [Holding!]! @derivedFrom(field: "token")
+}
+
+type Pool @entity {
+  id: ID!                          # Pool address
+  token0: Token!
+  token1: Token!
+  fee: BigInt!
+  tickSpacing: BigInt!
+  liquidity: BigInt!
+  sqrtPriceX96: BigInt!
+  tick: Int!
+  volumeToken0: BigDecimal!
+  volumeToken1: BigDecimal!
+  volumeUSD: BigDecimal!
+  txCount: BigInt!
+  createdAtTimestamp: BigInt!
+  createdAtBlockNumber: BigInt!
+}
+
+type DayData @entity {
+  id: ID!                          # timestamp / 86400
+  date: Int!
+  volumeUSD: BigDecimal!
+  txCount: BigInt!
+  uniqueWhales: Int!
+}

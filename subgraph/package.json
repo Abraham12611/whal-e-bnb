@@ -1,0 +1,21 @@
+{
+  "name": "whal-e-subgraph",
+  "version": "1.0.0",
+  "description": "Whal-E BNB Chain Subgraph",
+  "scripts": {
+    "codegen": "graph codegen",
+    "build": "graph build",
+    "deploy": "graph deploy --studio whal-e",
+    "create-local": "graph create --node http://localhost:8020/ whal-e",
+    "remove-local": "graph remove --node http://localhost:8020/ whal-e",
+    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 whal-e",
+    "test": "graph test"
+  },
+  "dependencies": {
+    "@graphprotocol/graph-cli": "0.80.0",
+    "@graphprotocol/graph-ts": "0.35.1"
+  },
+  "devDependencies": {
+    "matchstick-as": "0.6.0"
+  }
+}
